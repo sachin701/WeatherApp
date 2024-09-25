@@ -1,6 +1,8 @@
 package com.grayseal.forecastapp.navigation
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -18,6 +20,7 @@ import com.grayseal.forecastapp.screens.search.SearchScreen
 import com.grayseal.forecastapp.screens.splash.SplashScreen
 import com.grayseal.forecastapp.widgets.BottomNavItem
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun WeatherNavigation(context: Context) {
     val navController = rememberNavController()

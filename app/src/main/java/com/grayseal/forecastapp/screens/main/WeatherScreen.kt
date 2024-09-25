@@ -4,8 +4,10 @@ import GetCurrentLocation
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme.colors
@@ -34,6 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(
@@ -71,39 +74,6 @@ fun WeatherScreen(
                 mutableStateOf(360.0)
             }
             Toast.makeText(context, "Unknown Location", Toast.LENGTH_LONG).show()
-            /*Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 15.dp, end = 15.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.unknown_search),
-                    fontFamily = poppinsFamily,
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                TextButton(
-                    onClick = {
-                        navController.navigate(BottomNavItem.Search.route)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.textButtonColors(containerColor = Color(0xFFd68118)),
-                    elevation = ButtonDefaults.buttonElevation(4.dp)
-                ) {
-                    Text(
-                        stringResource(R.string.try_again),
-                        fontFamily = poppinsFamily,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White
-                    )
-
-                }
-            }*/
         }
     }
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
@@ -200,6 +170,7 @@ fun HomeElements(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 suspend fun getLocationName(
     context: Context,
     latitude: MutableState<Double>,
@@ -212,20 +183,30 @@ suspend fun getLocationName(
         when the operation is complete, allowing other operations to be performed in the meantime
          */
         val geocoder = Geocoder(context, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(latitude.value, longitude.value, 1)
         var locationName: String = ""
-        if (addresses != null && addresses.size > 0) {
-            locationName = addresses[0].locality
-        }
-        locationName
+        geocoder.getFromLocation(latitude.value, longitude.value, 1 ,
+        (Geocoder.GeocodeListener { addresses ->
+            if (addresses.size > 0) {
+                locationName = addresses[0].locality
+            }
+        })
+        )
+       locationName
+    
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun getLatLon(context: Context, cityName: String): Address? {
     val geocoder = Geocoder(context)
     return try {
-        val addresses = geocoder.getFromLocationName(cityName, 1)
-        addresses!![0]
+        var addresses: MutableList<Address>? = null
+        geocoder.getFromLocationName(cityName, 1,
+            (Geocoder.GeocodeListener { addresseslist -> addresses = addresseslist })
+        )
+
+        Log.e("weatherdata","$addresses")
+      addresses!![0]
     } catch (e: Exception) {
         // Toast.makeText(context, "Unknown Location", Toast.LENGTH_SHORT).show()
         null

@@ -206,7 +206,7 @@ fun ShowData(
             Log.d("Lat $ Lon", "$latitude and $longitude")
             value = mainViewModel.getWeatherData(latitude, longitude)
         }.value
-
+       Log.e("weatherdata" , "${weatherData.data}")
 
         if (weatherData.loading == true) {
             Column(
@@ -235,6 +235,7 @@ fun ShowData(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+
                 val icon = weatherData.data!!.current.weather[0].icon
                 var image = R.drawable.sun_cloudy
                 if (icon == "01d") {

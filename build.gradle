@@ -1,6 +1,5 @@
 buildscript {
     ext {
-        compose_ui_version = '1.7.2'
         hilt_version = '2.51.1'
         room_version = '2.4.3'
     }

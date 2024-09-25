@@ -1,5 +1,6 @@
 package com.grayseal.forecastapp.screens.main
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.grayseal.forecastapp.data.DataOrException
@@ -17,6 +18,8 @@ class MainViewModel @Inject constructor(private val repository: WeatherRepositor
         lat: Double,
         lon: Double
     ): DataOrException<Weather, Boolean, Exception> {
+
+        Log.e("weatherData","called lat = $lat lon = $lon")
         return repository.getWeather(latQuery = lat, lonQuery = lon)
     }
 }

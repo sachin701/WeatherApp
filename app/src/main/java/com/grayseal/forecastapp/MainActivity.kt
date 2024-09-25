@@ -3,9 +3,12 @@ package com.grayseal.forecastapp
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
@@ -28,14 +31,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val connectivityManager =
             this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
-        val isConnected: Boolean = activeNetwork?.isConnected == true
+        val activeNetwork = connectivityManager.isDefaultNetworkActive
+        val isConnected: Boolean = activeNetwork
         if (isConnected) {
             setContent {
+
+                Log.e("weather", "onmain ", )
                 WeatherApp(this)
             }
         } else {
@@ -46,6 +52,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun WeatherApp(context: Context) {
     ForecastApplicationTheme {
@@ -59,6 +66,7 @@ fun WeatherApp(context: Context) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun NoConnection(context: Context) {
     ForecastApplicationTheme {
@@ -120,8 +128,3 @@ fun NoConnection(context: Context) {
     }
 }
 
-/* @Preview(showBackground = true)
-@Composable
-fun DefaultPreview(context: Context, @PreviewParameter(name = "Text") text: String) {
-    WeatherApp(context = context)
-} */
