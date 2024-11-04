@@ -20,6 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AppModule {
 
+    
     // Set up all modules needed across the entire application such as databases, repositories
     /* Create a provider to provide the Once Call API */
     @Provides

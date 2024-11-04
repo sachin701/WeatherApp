@@ -46,6 +46,8 @@ fun WeatherNavigation(context: Context) {
                 )
             }
         }
+
+
         composable(BottomNavItem.Forecast.route) {
             ForecastScreen(navController = navController, forecastViewModel)
         }
